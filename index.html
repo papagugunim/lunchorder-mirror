@@ -791,22 +791,23 @@
            처음엔 롯데 빨강을 돌렸는데 「너무 빨갛다」 하셨다. 페이지 전체가 이미 빨강 계열이라
            이 줄만 빨강을 빼야 오히려 눈에 들어온다. 최애가 도는 금테이므로 여기는 **돌리지 않는다** —
            위쪽 두 줄이 다 움직이면 산만하다. 골격(높이·여백·글자 크기)은 최애와 똑같이 맞춰 두었다. */
+        /* 신메뉴 — 새우색(코랄) 2026-11-18 성민님: 더 눈에 띄게, 테두리·버튼 새우 색, 이름 가운데 정렬 */
         .new-section {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             margin-bottom: 12px;
-            padding: 10px 12px;
-            border-radius: 12px;
-            background: #E8F6F1;
-            border: 1.5px solid #BFE6DA;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: #FFF1EA;
+            border: 2px solid #FF8A65;
         }
 
         .new-title {
             flex: 0 0 auto;
-            font-size: 0.76rem;
+            font-size: 0.82rem;
             font-weight: 800;
-            color: #0F7A5F;
+            color: #E4572E;
             white-space: nowrap;
         }
 
@@ -819,16 +820,26 @@
         }
 
         .new-menu-option {
-            padding: 8px 6px !important;
-            border-color: #17A67F !important;
-            color: #0B5D48 !important;
-            font-weight: 700 !important;
+            padding: 14px 10px !important;
+            min-height: 52px;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            text-align: center !important;
+            background: #FF8A65 !important;
+            border: 2px solid #E4572E !important;
+            color: #fff !important;
+            font-size: 1rem !important;
+            font-weight: 800 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 2px 8px rgba(228, 87, 46, .28);
         }
 
         .new-menu-option.selected {
-            background: #17A67F !important;
-            border-color: #0F7A5F !important;
+            background: #E4572E !important;
+            border-color: #B93A17 !important;
             color: #fff !important;
+            box-shadow: 0 0 0 3px rgba(228, 87, 46, .25);
         }
 
         .favorite-title {
@@ -2536,10 +2547,6 @@
                 <div class="form-group">
 
                     <!-- 이 직원이 자주 먹은 메뉴 (주문 이력 기반) -->
-                    <div class="favorite-section" id="favoriteMenus" style="display: none;">
-                        <div class="favorite-title"><span aria-hidden="true">⭐</span> 최애</div>
-                        <div class="favorite-items" id="favoriteMenuItems"></div>
-                    </div>
 
                     <!-- 식당이 새로 낸 메뉴 (NEW_MENUS) -->
                     <div class="new-section" id="newMenus" style="display: none;">
@@ -3321,7 +3328,7 @@
         // 여기 이름은 그 식당 메뉴 목록에 **실제로 있는 이름**이어야 한다. 없으면 그냥 안 보인다.
         // 한동안 지나 새것이 아니게 되면 배열에서 빼면 된다 — 다른 곳은 고칠 필요가 없다.
         const NEW_MENUS = {
-            myungga: ['소고기 해장국', '갈비 우거지탕'],
+            myungga: ['새우볶음밥+짜장소스'],
             jasmin: [],
         };
 
@@ -4507,6 +4514,7 @@
         }
 
         async function renderFavoriteMenus(userName) {
+            return;   // 최애 메뉴 기능 비활성 (2026-11-18 성민님 요청). 되살리려면 이 줄과 아래 HTML 숨김만 풀면 된다.
             const section = document.getElementById('favoriteMenus');
             const container = document.getElementById('favoriteMenuItems');
             if (!section || !container || !currentRestaurant) return;
