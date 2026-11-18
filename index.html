@@ -2407,7 +2407,19 @@
         .btn-primary { background: var(--brand); border: 0; box-shadow: none; border-radius: 10px; }
         .btn-primary:disabled { background: var(--border-strong); color: #fff; }
         .btn-reset { background: none; border: 0; color: var(--text-subtle); }
-            .date-chip[hidden]{display:none !important}
+            .menu-category[data-category="런치세트"] .menu-category-items{grid-template-columns:1fr !important}
+        .menu-option.has-desc{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;
+            min-height:84px;padding:16px 18px;text-align:left;border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+        .menu-option .menu-text{display:flex;flex-direction:column;gap:5px;min-width:0}
+        .menu-option .menu-name{font-size:1.05rem;font-weight:700;line-height:1.25}
+        .menu-option .menu-desc{font-size:12px;font-weight:400;color:var(--text-muted);line-height:1.35}
+        .menu-option .menu-price{flex:none;font-size:.9rem;font-weight:700;padding:5px 10px;border-radius:999px;
+            background:var(--surface-alt);color:var(--text)}
+        .menu-option.has-desc:hover{transform:none;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+        .menu-option.has-desc.selected{transform:none;box-shadow:0 2px 10px rgba(218,41,28,.25)}
+        .menu-option.selected .menu-desc{color:rgba(255,255,255,.85)}
+        .menu-option.selected .menu-price{background:rgba(255,255,255,.2);color:#fff}
+        .date-chip[hidden]{display:none !important}
     </style>
 </head>
 
@@ -3012,11 +3024,28 @@
         const JASMIN_TAKEOUT_MENUS = ['공기밥(포장)'];
 
         // ===== 명가 메뉴 러시아어 번역 (기존) =====
+        // 메뉴 아래에 작게 보여줄 구성 설명 (런치세트: 밥 180g + 국 + 고정 반찬 4종)
+        const MENU_EMOJIS = {
+            '미역국+불고기 세트': '🥩',
+            '된장국+칠리두부볶음 세트': '🥘',
+            '김치찌개+제육볶음 세트': '🌶️',
+            '떡국+오징어볶음 세트': '🦑',
+            '새우볶음밥+짜장소스': '⭐'
+        };
+        const MENU_DESCRIPTIONS = {
+            '미역국+불고기 세트': '밥 + 반찬 4종',
+            '된장국+칠리두부볶음 세트': '밥 + 반찬 4종',
+            '김치찌개+제육볶음 세트': '밥 + 반찬 4종',
+            '떡국+오징어볶음 세트': '밥 + 반찬 4종',
+            '새우볶음밥+짜장소스': '시즌 한정 메뉴'
+        };
+
         const MENU_TRANSLATIONS = {
             '미역국+불고기 세트': 'Ланч-сет: мийок кук + пулькоги',
             '된장국+칠리두부볶음 세트': 'Ланч-сет: тенджан кук + тофу в соусе чили',
             '김치찌개+제육볶음 세트': 'Ланч-сет: кимчи-тиге + чеюк покым',
             '떡국+오징어볶음 세트': 'Ланч-сет: ток кук + кальмар покым',
+            '새우볶음밥+짜장소스': 'Сезонное: рис с креветками + соус чаджан',
             '랜덤 주문': 'Случайный выбор (Random)',
             '순대국': 'Сундэ кук паб',
             '갈비탕': 'Кальбитан (Kalbitang)',
@@ -3134,6 +3163,7 @@
             '된장국+칠리두부볶음 세트': 700,
             '김치찌개+제육볶음 세트': 700,
             '떡국+오징어볶음 세트': 700,
+            '새우볶음밥+짜장소스': null,   // 시즌 한정, 가격 미확인
             // 국물류
             '순대국': null,
             '갈비탕': 1300,
@@ -3270,7 +3300,7 @@
         // 카테고리별 메뉴 구조
         // 2026-08-02 사이트 대조 후 확장. 기존 메뉴는 사이트 미표기라도 유지(단골 주문용)
         const MENU_CATEGORIES = {
-            '런치세트': ['미역국+불고기 세트', '된장국+칠리두부볶음 세트', '김치찌개+제육볶음 세트', '떡국+오징어볶음 세트'],
+            '런치세트': ['미역국+불고기 세트', '된장국+칠리두부볶음 세트', '김치찌개+제육볶음 세트', '떡국+오징어볶음 세트', '새우볶음밥+짜장소스'],
             '밥류': ['짬뽕밥', '차돌짬뽕밥', '해물볶음밥', '소고기볶음밥', '새우볶음밥', '잡채밥', '비빔밥', '돌솥비빔밥', '김치볶음밥', '두부조림+공기밥'],
             '국물류': ['소고기 해장국', '갈비 우거지탕', '순대국', '갈비탕', '설렁탕', '해물순두부찌개', '김치순두부찌개', '된장찌개', '해물된장찌개', '명가해장국', '광어매운탕', '도가니탕', '알탕', '감자탕뚝배기', '떡만두국', '육계장', '김치찌개'],
             '고기·생선': ['뚝배기불고기', '삼겹살정식', '돈가스정식', '고등어조림', '고등어구이'],
@@ -4849,6 +4879,16 @@
             if (menu === '랜덤 주문') className += ' random';
             option.className = className;
             option.textContent = menu === '랜덤 주문' ? '🎰 랜덤 주문' : menu;
+            if (type !== 'side' && MENU_DESCRIPTIONS[menu]) {
+                option.textContent = '';
+                const nm = document.createElement('span'); nm.className = 'menu-name'; nm.textContent = (MENU_EMOJIS[menu] ? MENU_EMOJIS[menu] + ' ' : '') + menu;
+                const ds = document.createElement('span'); ds.className = 'menu-desc'; ds.textContent = MENU_DESCRIPTIONS[menu];
+                const tx = document.createElement('span'); tx.className = 'menu-text'; tx.append(nm, ds);
+                option.append(tx);
+                const pr = (typeof MYUNGGA_MENU_PRICES !== 'undefined') ? MYUNGGA_MENU_PRICES[menu] : null;
+                if (false && pr) { const pe = document.createElement('span'); pe.className = 'menu-price'; pe.textContent = pr + '₽'; option.append(pe); }
+                option.classList.add('has-desc');
+            }
             option.dataset.menu = menu;
             option.setAttribute('aria-pressed', 'false');
             option.onclick = () => selectMenu(menu, option, type);
